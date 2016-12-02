@@ -2,6 +2,8 @@ import boto3
 from boto3.dynamodb.conditions import Key
 import time
 import datetime
+from collections import defaultdict
+from collections import Counter
 
 def trunkcalls(trunkid):
 	dynamodb=boto3.resource(service_name='dynamodb', region_name='eu-west-1')
@@ -16,6 +18,9 @@ def trunkcalls(trunkid):
 	    KeyConditionExpression=Key('trunkid').eq(trunkid),
 	    Limit=100000
 	)
+
+
+	import pdb;pdb.set_trace()
 
 	print ('Query  a trunk calls end time   :', time.strftime("%H:%M:%S"), '(getting first 1M which is ', response['Count'], 'the limit') 
 
@@ -141,62 +146,62 @@ if __name__ == '__main__':
 		print ("")
 		var = raw_input("")
 
-		try:
-			if var == "a":
-				print("selected trunkid")
-				trk = raw_input()
-				trunkcalls(trk)
-			if var == "b":
-				print("selected trunkid")
-				trk = raw_input()
-				print("selected fromdate default 1480450008")
-				fd = raw_input()
-				if  fd =="":
-					fd = 1480450008
-				print("selected todate default 1480450029")
-				td = raw_input()
-				if  td =="":
-					td = 1480450029
-				trunkcallsbydatesort(trk,int(fd),int(td))
-			if var == "c":
-				print("selected accountid")
-				acc = raw_input()
-				accountcalls(acc)
-			if var == "d":
-				print("selected accountid")
-				acc = raw_input()
-				print("selected fromdate default 1480450008")
-				fd = raw_input()
-				if  fd =="":
-					fd = 1480450008
-				print("selected todate default 1480450029")
-				td = raw_input()
-				if  td =="":
-					td = 1480450029
-				accountcallsbydatesort(acc,int(fd),int(td))
-			if var == "e":
-				print("selected location default Port Kelsey")
-				loc = raw_input()
-				if loc == "":
-					loc = "Port Kelsey"
-				locationcalls(loc)
-			if var == "f":
-				print("selected location default Port Kelsey")
-				loc = raw_input()
-				if loc == "":
-					loc = "Port Kelsey"
-				print("selected fromdate default 1480447618")
-				fd = raw_input()
-				if  fd =="":
-					fd = 1480447618
-				print("selected todate default 1480451001")
-				td = raw_input()
-				if  td =="":
-					td = 1480451001
-				
-				locationcallsbydatesort(loc,int(fd),int(td))
+		# try:
+		if var == "a":
+			print("selected trunkid")
+			trk = raw_input()
+			trunkcalls(trk)
+		if var == "b":
+			print("selected trunkid")
+			trk = raw_input()
+			print("selected fromdate default 1480450008")
+			fd = raw_input()
+			if  fd =="":
+				fd = 1480450008
+			print("selected todate default 1480450029")
+			td = raw_input()
+			if  td =="":
+				td = 1480450029
+			trunkcallsbydatesort(trk,int(fd),int(td))
+		if var == "c":
+			print("selected accountid")
+			acc = raw_input()
+			accountcalls(acc)
+		if var == "d":
+			print("selected accountid")
+			acc = raw_input()
+			print("selected fromdate default 1480450008")
+			fd = raw_input()
+			if  fd =="":
+				fd = 1480450008
+			print("selected todate default 1480450029")
+			td = raw_input()
+			if  td =="":
+				td = 1480450029
+			accountcallsbydatesort(acc,int(fd),int(td))
+		if var == "e":
+			print("selected location default Port Kelsey")
+			loc = raw_input()
+			if loc == "":
+				loc = "Port Kelsey"
+			locationcalls(loc)
+		if var == "f":
+			print("selected location default Port Kelsey")
+			loc = raw_input()
+			if loc == "":
+				loc = "Port Kelsey"
+			print("selected fromdate default 1480447618")
+			fd = raw_input()
+			if  fd =="":
+				fd = 1480447618
+			print("selected todate default 1480451001")
+			td = raw_input()
+			if  td =="":
+				td = 1480451001
+			
+			locationcallsbydatesort(loc,int(fd),int(td))
 
-		except:
-			print("")
-			print("****** Problem with the report or report parameters. Please try again...")
-			pass
+		# except:
+		# 	print("")
+		# 	print("****** Problem with the report or report parameters. Please try again...")
+		# 	pass

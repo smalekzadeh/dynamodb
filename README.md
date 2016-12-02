@@ -25,6 +25,7 @@ Primary sort key	-
 Item count	1,000,000
 
 
+The callstab table has the following global secondary indexes:
 
 
 | Index name               | partition key      | sort key          |
@@ -41,3 +42,7 @@ Run the query.py and select a query from the available options.
 The queries are basic index queries.
 
 You could run similar queries using AWS dynamodb console.
+
+
+
+
