@@ -20,7 +20,7 @@ def trunkcalls(trunkid):
 	)
 
 
-	import pdb;pdb.set_trace()
+	# import pdb;pdb.set_trace()
 
 	print ('Query  a trunk calls end time   :', time.strftime("%H:%M:%S"), '(getting first 1M which is ', response['Count'], 'the limit') 
 

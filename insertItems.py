@@ -30,7 +30,7 @@ for i in xrange(10):
         else:
             trunkid="456" + str(i) + str(2)   
         source = "+4414822425" + str(i) + str(a)
-        for c in xrange(10000):
+        for c in xrange(10):
             itemcount = itemcount + 1
             callid = str(uuid.uuid4())
             response = table.put_item(
