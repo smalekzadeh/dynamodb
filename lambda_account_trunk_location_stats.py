@@ -38,18 +38,18 @@ def update_account_call_counter(account, event_datetime, event_count=1, dynamodb
 		UpdateExpression="ADD callcount :value")
 
 
-# update the location  call counts
-def update_location_call_counter(location, event_datetime, event_count=1, dynamodb = boto3.resource(service_name='dynamodb', region_name='eu-west-1')):
-		table = dynamodb.Table('location_call_count')
+# # update the location  call counts
+# def update_location_call_counter(location, event_datetime, event_count=1, dynamodb = boto3.resource(service_name='dynamodb', region_name='eu-west-1')):
+# 		table = dynamodb.Table('location_call_count')
 		
-		# insert the item
-		response = table.update_item(
-		Key={
-			'location': location, 
-			'date_sort': event_datetime
-		},
-		ExpressionAttributeValues={":value":event_count},
-		UpdateExpression="ADD callcount :value")
+# 		# insert the item
+# 		response = table.update_item(
+# 		Key={
+# 			'location': location, 
+# 			'date_sort': event_datetime
+# 		},
+# 		ExpressionAttributeValues={":value":event_count},
+# 		UpdateExpression="ADD callcount :value")
 
 
 def lambda_handler(event, context):
@@ -65,11 +65,11 @@ def lambda_handler(event, context):
 	hour_account_call_count = defaultdict(int)
 	day_account_call_count = defaultdict(int)
 
-	week_location_call_count = defaultdict(int)
-	month_location_call_count = defaultdict(int)
-	year_location_call_count = defaultdict(int)
-	hour_location_call_count = defaultdict(int)
-	day_location_call_count = defaultdict(int)
+# 	week_location_call_count = defaultdict(int)
+# 	month_location_call_count = defaultdict(int)
+# 	year_location_call_count = defaultdict(int)
+# 	hour_location_call_count = defaultdict(int)
+# 	day_location_call_count = defaultdict(int)
 
 	for record in event['Records']:    
 		
@@ -84,11 +84,11 @@ def lambda_handler(event, context):
 			account = record['dynamodb']["NewImage"]["accountid"]["S"]
 		except:
 			account = 'NULL'
-		# location
-		try:
-			account = record['dynamodb']["NewImage"]["location"]["S"]
-		except:
-			account = 'NULL'
+# 		# location
+# 		try:
+# 			location = record['dynamodb']["NewImage"]["location"]["S"]
+# 		except:
+# 			location = 'NULL'
 
 		hour_event_time=datetime.now().strftime("%Y-%m-%dT%H")
 		day_event_time=datetime.now().strftime("%Y-%m-%d")
@@ -108,11 +108,11 @@ def lambda_handler(event, context):
 		month_account_call_count[(account, month_event_time)] += 1
 		year_account_call_count[(account, year_event_time)] += 1
 
-		hour_location_call_count[(location, hour_event_time)] += 1
-		day_location_call_count[(location, day_event_time)] += 1
-		week_location_call_count[(location, week_event_time)] += 1
-		month_location_call_count[(location, month_event_time)] += 1
-		year_location_call_count[(location, year_event_time)] += 1
+# 		hour_location_call_count[(location, hour_event_time)] += 1
+# 		day_location_call_count[(location, day_event_time)] += 1
+# 		week_location_call_count[(location, week_event_time)] += 1
+# 		month_location_call_count[(location, month_event_time)] += 1
+# 		year_location_call_count[(location, year_event_time)] += 1
 
 	# insert  trunk call counts 
 	for key,val in hour_trunk_call_count.iteritems():
@@ -156,25 +156,25 @@ def lambda_handler(event, context):
 		# print("%s, %s = %s" % (str(key[0]), str(key[1]), str(val)))
 		update_account_call_counter( key[0], key[1], int(val))
 
-	# insert location call counts 
-	for key,val in hour_location_call_count.iteritems():
-		# print("%s, %s = %s" % (str(key[0]), str(key[1]), str(val)))
-		update_location_call_counter( key[0], key[1], int(val)) 
+# 	# insert location call counts 
+# 	for key,val in hour_location_call_count.iteritems():
+# 		# print("%s, %s = %s" % (str(key[0]), str(key[1]), str(val)))
+# 		update_location_call_counter( key[0], key[1], int(val)) 
 
-	for key,val in day_location_call_count.iteritems():
-		# print("%s, %s = %s" % (str(key[0]), str(key[1]), str(val)))
-		update_location_call_counter(key[0], key[1], int(val)) 
+# 	for key,val in day_location_call_count.iteritems():
+# 		# print("%s, %s = %s" % (str(key[0]), str(key[1]), str(val)))
+# 		update_location_call_counter(key[0], key[1], int(val)) 
 
-	for key,val in week_location_call_count.iteritems():
-		# print("%s, %s = %s" % (str(key[0]), str(key[1]), str(val)))
-		update_location_call_counter( key[0], key[1], int(val))
+# 	for key,val in week_location_call_count.iteritems():
+# 		# print("%s, %s = %s" % (str(key[0]), str(key[1]), str(val)))
+# 		update_location_call_counter( key[0], key[1], int(val))
 
-	for key,val in month_location_call_count.iteritems():
-		# print("%s, %s = %s" % (str(key[0]), str(key[1]), str(val)))
-		update_location_call_counter( key[0], key[1], int(val))
+# 	for key,val in month_location_call_count.iteritems():
+# 		# print("%s, %s = %s" % (str(key[0]), str(key[1]), str(val)))
+# 		update_location_call_counter( key[0], key[1], int(val))
 
-	for key,val in year_location_call_count.iteritems():
-		# print("%s, %s = %s" % (str(key[0]), str(key[1]), str(val)))
-		update_location_call_counter( key[0], key[1], int(val))
+# 	for key,val in year_location_call_count.iteritems():
+# 		# print("%s, %s = %s" % (str(key[0]), str(key[1]), str(val)))
+# 		update_location_call_counter( key[0], key[1], int(val))
 
 	

@@ -12,7 +12,7 @@ faker = Factory.create()
 
 dynamodb=boto3.resource(service_name='dynamodb', region_name='eu-west-1')
 
-table = dynamodb.Table("callstab")
+table = dynamodb.Table("calls")
 
 itemcount = 0
 
@@ -23,14 +23,14 @@ print int(time.time())
 
 
 for i in xrange(10):
-    accountid = "123" + str(i)
+    accountid = "X123" + str(i)
     for a in xrange(10): 
         if a%2==0:
-            trunkid="456" + str(i)
+            trunkid="X456" + str(i)
         else:
-            trunkid="456" + str(i) + str(2)   
+            trunkid="Y456" + str(i) + str(2)   
         source = "+4414822425" + str(i) + str(a)
-        for c in xrange(10):
+        for c in xrange(100):
             itemcount = itemcount + 1
             callid = str(uuid.uuid4())
             response = table.put_item(
@@ -39,7 +39,7 @@ for i in xrange(10):
                     'accountid': accountid,
                     'trunkid':trunkid,
                     'source': source,
-                    'location': faker.city(),
+                    'location': faker.country(),
                     'calldate': int(time.time())
 
             }

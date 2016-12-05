@@ -8,7 +8,7 @@ from collections import Counter
 def trunkcalls(trunkid):
 	dynamodb=boto3.resource(service_name='dynamodb', region_name='eu-west-1')
 
-	table = dynamodb.Table("callstab")
+	table = dynamodb.Table("calls")
 
 	#  query a index
 	print ('Query a trunk calls start time :', time.strftime("%H:%M:%S"))
@@ -24,26 +24,28 @@ def trunkcalls(trunkid):
 
 	print ('Query  a trunk calls end time   :', time.strftime("%H:%M:%S"), '(getting first 1M which is ', response['Count'], 'the limit') 
 
-	# # use the below code to scan the whole results and get the count
-	# rowcount = response['Count']
-	# while 'LastEvaluatedKey' in response:
+	# use the below code to scan the whole results and get the count
+	rowcount = response['Count']
+	
+	while 'LastEvaluatedKey' in response:
 
-	# 	response = table.query(
-	# 		    IndexName='trunkid-calldate-index',
-	# 		    KeyConditionExpression=Key('trunkid').eq("45692"),
+		response = table.query(
+			    IndexName='trunkid-calldate-index',
+			    KeyConditionExpression=Key('trunkid').eq("45692"),
 
-	# 		    ExclusiveStartKey=response['LastEvaluatedKey']
-	# 			)
-	# 	rowcount = response['Count'] + rowcount
+			    ExclusiveStartKey=response['LastEvaluatedKey']
+				)
+		rowcount = response['Count'] + rowcount
 
-	#     # 
+	    # 
 
-	# print ("Query results item count: ", rowcount)
+	print ("Query results item count: ", rowcount)
+
 
 def trunkcallsbydatesort(trunkid,fromdate,todate):
 	dynamodb=boto3.resource(service_name='dynamodb', region_name='eu-west-1')
 
-	table = dynamodb.Table("callstab")
+	table = dynamodb.Table("calls")
 	fd = datetime.datetime.fromtimestamp(fromdate).strftime('%Y-%m-%d %H:%M:%S')
 	td = datetime.datetime.fromtimestamp(todate).strftime('%Y-%m-%d %H:%M:%S')
 	#  query a index
@@ -60,7 +62,7 @@ def trunkcallsbydatesort(trunkid,fromdate,todate):
 def accountcalls(accountid):
 	dynamodb=boto3.resource(service_name='dynamodb', region_name='eu-west-1')
 
-	table = dynamodb.Table("callstab")
+	table = dynamodb.Table("calls")
 
 	#  query a index
 	print ('Query an account calls start time :', time.strftime("%H:%M:%S"))
@@ -77,7 +79,7 @@ def accountcalls(accountid):
 def accountcallsbydatesort(accountid,fromdate,todate):
 	dynamodb=boto3.resource(service_name='dynamodb', region_name='eu-west-1')
 
-	table = dynamodb.Table("callstab")
+	table = dynamodb.Table("calls")
 	fd = datetime.datetime.fromtimestamp(fromdate).strftime('%Y-%m-%d %H:%M:%S')
 	td = datetime.datetime.fromtimestamp(todate).strftime('%Y-%m-%d %H:%M:%S')
 	#  query a index
@@ -95,7 +97,7 @@ def accountcallsbydatesort(accountid,fromdate,todate):
 def locationcalls(location):
 	dynamodb=boto3.resource(service_name='dynamodb', region_name='eu-west-1')
 
-	table = dynamodb.Table("callstab")
+	table = dynamodb.Table("calls")
 
 	#  query a index
 	print ('Query a location calls start time :' + time.strftime("%H:%M:%S"))
@@ -112,7 +114,7 @@ def locationcalls(location):
 def locationcallsbydatesort(location,fromdate,todate):
 	dynamodb=boto3.resource(service_name='dynamodb', region_name='eu-west-1')
 
-	table = dynamodb.Table("callstab")
+	table = dynamodb.Table("calls")
 	fd = datetime.datetime.fromtimestamp(fromdate).strftime('%Y-%m-%d %H:%M:%S')
 	td = datetime.datetime.fromtimestamp(todate).strftime('%Y-%m-%d %H:%M:%S')
 	#  query a index
