@@ -39,7 +39,6 @@ def lambda_handler(event, context):
 	# set the date dorts
 	hour_event_time= calendar.timegm(datetime.strptime(datetime.now().strftime("%Y-%m-%dT%H"),"%Y-%m-%dT%H").utctimetuple()) # datetime.now().strftime("%Y-%m-%dT%H")
 	day_event_time=	 calendar.timegm(datetime.strptime(datetime.now().strftime("%Y-%m-%d"),"%Y-%m-%d").utctimetuple())	#datetime.now().strftime("%Y-%m-%d")
-	# week_event_time= calendar.timegm(datetime.strptime(datetime.now().strftime("%YW%W"),"%YW%W").utctimetuple())	#datetime.now().strftime("%YW%W")
 	month_event_time= calendar.timegm(datetime.strptime(datetime.now().strftime("%Y-%m"),"%Y-%m").utctimetuple())	#datetime.now().strftime("%Y-%m")
 	year_event_time= calendar.timegm(datetime.strptime(datetime.now().strftime("%Y"),"%Y").utctimetuple())#datetime.now().strftime("%Y")
 
@@ -73,7 +72,6 @@ def lambda_handler(event, context):
 
 		update_source_call_counter( source, location,calltype,hour_event_time, 1)
 		update_source_call_counter( source, location,calltype,day_event_time, 1)
-		# update_trunk_call_counter( source, location,calltype,week_event_time, 1)
 		update_source_call_counter( source, location,calltype,month_event_time, 1)
 		update_source_call_counter( source, location,calltype,year_event_time, 1)
 

@@ -38,6 +38,10 @@ def createtable(tablename):
                 'AttributeName': 'location',
                 'AttributeType': 'S'
             },
+             {
+                'AttributeName': 'source',
+                'AttributeType': 'S'
+            },
             { 
                 'AttributeName': 'calldate',
                 'AttributeType': 'N'

@@ -32,21 +32,13 @@ def update_account_call_counter(account, location, calltype, event_datetime, eve
  
 
 def lambda_handler(event, context):
-
-
-	week_account_call_count = defaultdict(int)
-	month_account_call_count = defaultdict(int)
-	year_account_call_count = defaultdict(int)
-	hour_account_call_count = defaultdict(int)
-	day_account_call_count = defaultdict(int)
-
 	
 	# set the date dorts
-	hour_event_time= calendar.timegm(datetime.strptime(datetime.now().strftime("%Y-%m-%dT%H"),"%Y-%m-%dT%H").utctimetuple()) # datetime.now().strftime("%Y-%m-%dT%H")
-	day_event_time=	 calendar.timegm(datetime.strptime(datetime.now().strftime("%Y-%m-%d"),"%Y-%m-%d").utctimetuple())	#datetime.now().strftime("%Y-%m-%d")
-	# week_event_time= calendar.timegm(datetime.strptime(datetime.now().strftime("%YW%W"),"%YW%W").utctimetuple())	#datetime.now().strftime("%YW%W")
-	month_event_time= calendar.timegm(datetime.strptime(datetime.now().strftime("%Y-%m"),"%Y-%m").utctimetuple())	#datetime.now().strftime("%Y-%m")
-	year_event_time= calendar.timegm(datetime.strptime(datetime.now().strftime("%Y"),"%Y").utctimetuple())#datetime.now().strftime("%Y")
+	# hour_event_time= calendar.timegm(datetime.strptime(datetime.now().strftime("%Y-%m-%dT%H"),"%Y-%m-%dT%H").utctimetuple()) # datetime.now().strftime("%Y-%m-%dT%H")
+	# day_event_time=	 calendar.timegm(datetime.strptime(datetime.now().strftime("%Y-%m-%d"),"%Y-%m-%d").utctimetuple())	#datetime.now().strftime("%Y-%m-%d")
+	# month_event_time= calendar.timegm(datetime.strptime(datetime.now().strftime("%Y-%m"),"%Y-%m").utctimetuple())	#datetime.now().strftime("%Y-%m")
+	# year_event_time= calendar.timegm(datetime.strptime(datetime.now().strftime("%Y"),"%Y").utctimetuple())#datetime.now().strftime("%Y")
+
 
 
 	timenow = datetime.now()
@@ -69,17 +61,19 @@ def lambda_handler(event, context):
 		except:
 			calltype = 'NoCallType'
 
-		# hour_event_time=datetime.now().strftime("%Y-%m-%dT%H")
-		# day_event_time=datetime.now().strftime("%Y-%m-%d")
-		# week_event_time=datetime.now().strftime("%YW%W")
-		# month_event_time=datetime.now().strftime("%Y-%m")
-		# year_event_time=datetime.now().strftime("%Y")
+		calldate = record['dynamodb']["NewImage"]["calldate"]["N"]
+		
 
-		update_account_call_counter( account, location,calltype,hour_event_time, 1)
-		update_account_call_counter( account, location,calltype,day_event_time, 1)
-		# update_account_call_counter( account, location,calltype,week_event_time, 1)
-		update_account_call_counter( account, location,calltype,month_event_time, 1)
-		update_account_call_counter( account, location,calltype,year_event_time, 1)
+
+		hour_event_time = datetime.strftime(datetime.strptime(calldate,"%Y%m%d%H%M%S"),"%Y%m%d%H")
+		day_event_time  = datetime.strftime(datetime.strptime(calldate,"%Y%m%d%H%M%S"),"%Y%m%d")
+		month_event_time = datetime.strftime(datetime.strptime(calldate,"%Y%m%d%H%M%S"),"%Y%m")
+		year_event_time = datetime.strftime(datetime.strptime(calldate,"%Y%m%d%H%M%S"),"%Y")
+
+		update_account_call_counter( account, location,calltype,int(hour_event_time), 1)
+		update_account_call_counter( account, location,calltype,int(day_event_time), 1)
+		update_account_call_counter( account, location,calltype,int(month_event_time), 1)
+		update_account_call_counter( account, location,calltype,int(year_event_time), 1)
 
 	donetime = datetime.now()
 	print("setting dict: " , donetime - timenow)
