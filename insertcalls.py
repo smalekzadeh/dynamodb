@@ -33,7 +33,7 @@ calldirecttionidx = cycle(range(2))
 # import pdb; pdb.set_trace()
 
 
-for i in xrange(1):
+for i in xrange(10):
     acccount = 0
     accountid = "ACC-123" + str(i)
     for a in xrange(10): 
@@ -45,7 +45,7 @@ for i in xrange(1):
         source = "+4414822425-" + trunkid
         trkcount =0
         numcount =0
-        time.sleep( 10 )
+        
         for c in xrange(100):
             itemcount = itemcount + 1
             callid = str(uuid.uuid4())
@@ -65,6 +65,7 @@ for i in xrange(1):
             acccount += 1
             trkcount += 1
             numcount += 1
+        time.sleep( 5)
         print("trunk ", trunkid, " : ", trkcount )
         print("number ", source, " : ", numcount )
     print("account ", accountid, " : ", acccount )
