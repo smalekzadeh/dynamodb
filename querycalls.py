@@ -8,18 +8,28 @@ from collections import Counter
 def trunkcalls(trunkid):
 	dynamodb=boto3.resource(service_name='dynamodb', region_name='eu-west-1')
 
-	table = dynamodb.Table("callstab2")
+	table = dynamodb.Table("calls")
 
 	#  query a index
 	print ('Query a trunk calls start time :', time.strftime("%H:%M:%S"))
+	indexName='trunkid-calldate-index'
+	keyConditionExpression=Key('trunkid').eq(trunkid)
+	filterExpression = None
 
-	response = table.query(
-	    IndexName='trunkid-calldate-index',
-	    KeyConditionExpression=Key('trunkid').eq(trunkid),
-	    Limit=100000
-	)
+	# querttuple =(indn,kc)
+
+	# querystr = "IndexName='trunkid-calldate-index',KeyConditionExpression=Key('trunkid').eq(TRK-Y456-7-ACC-1232),Limit=100000"
+	import pdb; pdb.set_trace()
+	response = table.query(IndexName= indexName, 
+							KeyConditionExpression= keyConditionExpression,
+							FilterExpression=filterExpression)
+
+	
 
 
+	# IndexName='trunkid-calldate-index',
+	#     KeyConditionExpression=Key('trunkid').eq(trunkid),
+	#     Limit=100000
 	# import pdb;pdb.set_trace()
 
 	print ('Query  a trunk calls end time   :', time.strftime("%H:%M:%S"), '(getting first 1M which is ', response['Count'], 'the limit') 

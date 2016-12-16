@@ -96,7 +96,7 @@ for i in xrange(2):
                     'location': re.sub(r'([^\s\w]|_)+', '', faker.country()).replace(' ', '_'),
                     'calltype': calltype[calltypeidx.next()],
                     'calldirection': calldirecttion[calldirecttionidx.next()],
-                    'calldate': int(time.time())
+                    'calldate': int(datetime.now().strftime("%Y%m%d%H%M%S"))
 
                     }
             response = table.put_item(Item = item)        

@@ -1,24 +1,21 @@
 from __future__ import print_function
-
 import boto3
 import re
 from boto3.dynamodb.conditions import Key
-# import time
 import datetime
-# from collections import defaultdict
-# from collections import Counter
 from datetime import datetime
-# import decimal
-# from decimal import Decimal
-# import calendar
 
 		
 		
 # update the account  call counts
-def update_account_call_counter(account, location, calltype, event_datetime, event_count=1, dynamodb = boto3.resource(service_name='dynamodb', region_name='eu-west-1')):
+def update_account_call_counter(account, location, calltype, duration, event_datetime, event_count=1, dynamodb = boto3.resource(service_name='dynamodb', region_name='eu-west-1')):
 		table = dynamodb.Table('call_stats')
 		
-		
+		locationcount = location + "_count"
+		locationdur =  location + "_duration"
+
+		calltypecount = calltype + "_count"
+		calltypedur = calltype + "_duration"
 		
 		# insert the item
 		response = table.update_item(
@@ -26,14 +23,19 @@ def update_account_call_counter(account, location, calltype, event_datetime, eve
 			'entityid': account, 
 			'date_sort': event_datetime
 		},
-		ExpressionAttributeValues={":value":event_count},
-		UpdateExpression="ADD AA_TOTALS_COUNT :value, %s :value , %s :value" % (location, calltype)
+		ExpressionAttributeValues={":value":event_count, ":duration":duration},
+		UpdateExpression="ADD AA_TOTALS_COUNT :value, AA_TOTALS_DUR :duration,  %s :value , %s :value , %s :duration, %s :duration" % (locationcount, calltypecount,locationdur,calltypedur)
 		)
  
 # update the trunk call counts
-def update_trunk_call_counter(trunk, location, calltype, event_datetime, event_count=1, dynamodb = boto3.resource(service_name='dynamodb', region_name='eu-west-1')):
+def update_trunk_call_counter(trunk, location, calltype, duration, event_datetime, event_count=1, dynamodb = boto3.resource(service_name='dynamodb', region_name='eu-west-1')):
 		table = dynamodb.Table('call_stats')
 		
+		locationcount = location + "_count"
+		locationdur =  location + "_duration"
+
+		calltypecount = calltype + "_count"
+		calltypedur = calltype + "_duration"
 		
 		
 		# insert the item
@@ -42,12 +44,19 @@ def update_trunk_call_counter(trunk, location, calltype, event_datetime, event_c
 			'entityid': trunk, 
 			'date_sort': event_datetime
 		},
-		ExpressionAttributeValues={":value":event_count},
-		UpdateExpression="ADD AA_TOTALS_COUNT :value, %s :value , %s :value" % (location, calltype)
+		ExpressionAttributeValues={":value":event_count, ":duration":duration},
+		UpdateExpression="ADD AA_TOTALS_COUNT :value, AA_TOTALS_DUR :duration,  %s :value , %s :value , %s :duration, %s :duration" % (locationcount, calltypecount,locationdur,calltypedur)
 		)
+
 # update the trunk call counts
-def update_source_call_counter(source, location, calltype, event_datetime, event_count=1, dynamodb = boto3.resource(service_name='dynamodb', region_name='eu-west-1')):
+def update_source_call_counter(source, location, calltype, duration, event_datetime, event_count=1, dynamodb = boto3.resource(service_name='dynamodb', region_name='eu-west-1')):
 		table = dynamodb.Table('call_stats')	
+		
+		locationcount = location + "_count"
+		locationdur =  location + "_duration"
+
+		calltypecount = calltype + "_count"
+		calltypedur = calltype + "_duration"
 		
 		# insert the item
 		response = table.update_item(
@@ -55,8 +64,8 @@ def update_source_call_counter(source, location, calltype, event_datetime, event
 			'entityid': source, 
 			'date_sort': event_datetime
 		},
-		ExpressionAttributeValues={":value":event_count},
-		UpdateExpression="ADD AA_TOTALS_COUNT :value, %s :value , %s :value" % (location, calltype)
+		ExpressionAttributeValues={":value":event_count, ":duration":duration},
+		UpdateExpression="ADD AA_TOTALS_COUNT :value, AA_TOTALS_DUR :duration,  %s :value , %s :value , %s :duration, %s :duration" % (locationcount, calltypecount,locationdur,calltypedur)
 		)
 		
 		
@@ -92,6 +101,11 @@ def lambda_handler(event, context):
 			calltype = record['dynamodb']["NewImage"]["calltype"]["S"]
 		except:
 			calltype = 'NoCallType'
+		# duration
+		try:
+			duration = int(record['dynamodb']["NewImage"]["duration"]["N"])
+		except:
+			duration = 0
 			
         # print(record)
         
@@ -105,20 +119,20 @@ def lambda_handler(event, context):
 		month_event_time = datetime.strftime(datetime.strptime(calldate,"%Y%m%d%H%M%S"),"%Y%m")
 		year_event_time = datetime.strftime(datetime.strptime(calldate,"%Y%m%d%H%M%S"),"%Y")
         
-		update_account_call_counter( account, location,calltype,int(hour_event_time), 1)
-		update_account_call_counter( account, location,calltype,int(day_event_time), 1)
-		update_account_call_counter( account, location,calltype,int(month_event_time), 1)
-		update_account_call_counter( account, location,calltype,int(year_event_time), 1)
+		update_account_call_counter( account, location,calltype,duration,int(hour_event_time), 1)
+		update_account_call_counter( account, location,calltype,duration,int(day_event_time), 1)
+		update_account_call_counter( account, location,calltype,duration,int(month_event_time), 1)
+		update_account_call_counter( account, location,calltype,duration,int(year_event_time), 1)
 		
-		update_trunk_call_counter( trunk, location,calltype,int(hour_event_time), 1)
-		update_trunk_call_counter( trunk, location,calltype,int(day_event_time), 1)
-		update_trunk_call_counter( trunk, location,calltype,int(month_event_time), 1)
-		update_trunk_call_counter( trunk, location,calltype,int(year_event_time), 1)
+		update_trunk_call_counter( trunk, location,calltype,duration,int(hour_event_time), 1)
+		update_trunk_call_counter( trunk, location,calltype,duration,int(day_event_time), 1)
+		update_trunk_call_counter( trunk, location,calltype,duration,int(month_event_time), 1)
+		update_trunk_call_counter( trunk, location,calltype,duration,int(year_event_time), 1)
 		
-		update_source_call_counter( source, location,calltype,int(hour_event_time), 1)
-		update_source_call_counter( source, location,calltype,int(day_event_time), 1)
-		update_source_call_counter( source, location,calltype,int(month_event_time), 1)
-		update_source_call_counter( source, location,calltype,int(year_event_time), 1)
+		update_source_call_counter( source, location,calltype,duration,int(hour_event_time), 1)
+		update_source_call_counter( source, location,calltype,duration,int(day_event_time), 1)
+		update_source_call_counter( source, location,calltype,duration,int(month_event_time), 1)
+		update_source_call_counter( source, location,calltype,duration,int(year_event_time), 1)
 
 	donetime = datetime.now()
 	print("setting dict: " , donetime - timenow)
